@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Wrapper so `ros2 run swift_pico task_1c_controller` works without .py
+exec "$(dirname "$(readlink -f "$0")")/task_1c_controller.py" "$@"

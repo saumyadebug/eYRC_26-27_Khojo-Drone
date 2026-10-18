@@ -74,6 +74,30 @@ install(
   DESTINATION lib/${PROJECT_NAME}
 )
 
+# --- Task 1C: position (X/pitch, Y/roll) PID controller ---------------------
+install(
+  PROGRAMS src/task_1c_controller.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+  PROGRAMS src/task_1c_controller
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# --- Task 1B: altitude (Z / throttle) PID controller ------------------------
+install(
+  PROGRAMS src/task_1b_controller.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# Wrapper without the .py suffix so `ros2 run swift_pico task_1b_controller`
+# works as documented in the task instructions.
+install(
+  PROGRAMS src/task_1b_controller
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 # Add the LQR controller and the waypoint service, client and server nodes below this line.
 
 ament_package()

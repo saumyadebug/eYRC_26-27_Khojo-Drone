@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Wrapper so `ros2 run swift_pico task_1b_controller` works without the .py
+# suffix (ament registers Python entry points under their full filename).
+exec "$(dirname "$(readlink -f "$0")")/task_1b_controller.py" "$@"
