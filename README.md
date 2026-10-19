@@ -441,6 +441,7 @@ cd submissions/task_1c && unzip -l KD_1298_task_1c.zip   # expect exactly 2 file
 | [docs/CONTROL_TUNING.md](docs/CONTROL_TUNING.md) | How every gain was derived from simulator parameters and measurements |
 | [docs/TESTING.md](docs/TESTING.md) | Step-by-step verification of every task |
 | [docs/WORKLOG.md](docs/WORKLOG.md) | What went wrong and how each problem was diagnosed |
+| [docs/KD_Stage1_Task1A-1C_Session_Summary.docx](docs/KD_Stage1_Task1A-1C_Session_Summary.docx) | **Word document** summarising the whole Stage 1 engineering session &mdash; approach, root causes, measured results and outstanding work |
 | [submissions/task_1a/README.md](submissions/task_1a/README.md) | Task 1A write-up |
 | [submissions/task_1b/README.md](submissions/task_1b/README.md) | Task 1B write-up |
 | [submissions/task_1c/README.md](submissions/task_1c/README.md) | Task 1C write-up |
