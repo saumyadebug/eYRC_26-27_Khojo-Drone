@@ -190,11 +190,11 @@ class Task1CController(Node):
 		self.timer = self.create_timer(self.sample_time, self.pid)
 
 		self.get_logger().info(
-			'Task 1C position PID active: roll Kp=%.2f Ki=%.2f Kd=%.2f | '
-			'pitch Kp=%.2f Ki=%.2f Kd=%.2f | throttle Kp=%.2f Ki=%.2f Kd=%.2f | '
+			'Task 1C position PID active: roll Kp=%.3f Ki=%.3f Kd=%.3f | '
+			'pitch Kp=%.3f Ki=%.3f Kd=%.3f | throttle Kp=%.2f Ki=%.2f Kd=%.2f | '
 			'target=(%.2f, %.2f, %.2f)' % (
-				self.Kp[0], self.Ki[0], self.Kd[0],
-				self.Kp[1], self.Ki[1], self.Kd[1],
+				self.Kp_outer[0], self.Ki_outer[0], self.Kd_outer[0],
+				self.Kp_outer[1], self.Ki_outer[1], self.Kd_outer[1],
 				self.Kp[2], self.Ki[2], self.Kd[2],
 				self.desired_state[0], self.desired_state[1], self.desired_state[2]))
 
@@ -250,18 +250,21 @@ class Task1CController(Node):
 	# actual gain and is applied directly, with no further scaling.
 	# ----------------------------------------------------------------------
 	def roll_set_pid(self, msg):
-		self.Kp[0] = msg.kp * self.tuner_gain_scaling
-		self.Ki[0] = msg.ki * self.tuner_gain_scaling
-		self.Kd[0] = msg.kd * self.tuner_gain_scaling
+		# The horizontal axes are an OUTER position loop, so the tuner values
+		# belong to Kp_outer/Ki_outer/Kd_outer (they produce a desired tilt
+		# angle, not an RC count).
+		self.Kp_outer[0] = msg.kp * self.tuner_gain_scaling
+		self.Ki_outer[0] = msg.ki * self.tuner_gain_scaling
+		self.Kd_outer[0] = msg.kd * self.tuner_gain_scaling
 		self.get_logger().info('Roll gains updated: Kp=%.3f Ki=%.3f Kd=%.3f' % (
-			self.Kp[0], self.Ki[0], self.Kd[0]))
+			self.Kp_outer[0], self.Ki_outer[0], self.Kd_outer[0]))
 
 	def pitch_set_pid(self, msg):
-		self.Kp[1] = msg.kp * self.tuner_gain_scaling
-		self.Ki[1] = msg.ki * self.tuner_gain_scaling
-		self.Kd[1] = msg.kd * self.tuner_gain_scaling
+		self.Kp_outer[1] = msg.kp * self.tuner_gain_scaling
+		self.Ki_outer[1] = msg.ki * self.tuner_gain_scaling
+		self.Kd_outer[1] = msg.kd * self.tuner_gain_scaling
 		self.get_logger().info('Pitch gains updated: Kp=%.3f Ki=%.3f Kd=%.3f' % (
-			self.Kp[1], self.Ki[1], self.Kd[1]))
+			self.Kp_outer[1], self.Ki_outer[1], self.Kd_outer[1]))
 
 	def throttle_set_pid(self, msg):
 		# Same semantics as Task 1B; the Task 1B gains are preserved when the
@@ -424,22 +427,22 @@ def main(args=None):
 	rclpy.init(args=ros_args)
 	controller = Task1CController()
 	if parsed.kp is not None:
-		controller.Kp[0] = parsed.kp
+		controller.Kp_outer[0] = parsed.kp
 	if parsed.ki is not None:
-		controller.Ki[0] = parsed.ki
+		controller.Ki_outer[0] = parsed.ki
 	if parsed.kd is not None:
-		controller.Kd[0] = parsed.kd
+		controller.Kd_outer[0] = parsed.kd
 	if parsed.kp_pitch is not None:
-		controller.Kp[1] = parsed.kp_pitch
+		controller.Kp_outer[1] = parsed.kp_pitch
 	if parsed.ki_pitch is not None:
-		controller.Ki[1] = parsed.ki_pitch
+		controller.Ki_outer[1] = parsed.ki_pitch
 	if parsed.kd_pitch is not None:
-		controller.Kd[1] = parsed.kd_pitch
+		controller.Kd_outer[1] = parsed.kd_pitch
 	controller.reset_pid()
 	controller.get_logger().info(
-		'Final gains: roll Kp=%.2f Ki=%.2f Kd=%.2f | pitch Kp=%.2f Ki=%.2f Kd=%.2f' % (
-			controller.Kp[0], controller.Ki[0], controller.Kd[0],
-			controller.Kp[1], controller.Ki[1], controller.Kd[1]))
+		'Final gains: roll Kp=%.3f Ki=%.3f Kd=%.3f | pitch Kp=%.3f Ki=%.3f Kd=%.3f' % (
+			controller.Kp_outer[0], controller.Ki_outer[0], controller.Kd_outer[0],
+			controller.Kp_outer[1], controller.Ki_outer[1], controller.Kd_outer[1]))
 
 	try:
 		rclpy.spin(controller)

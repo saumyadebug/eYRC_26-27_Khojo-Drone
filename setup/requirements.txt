@@ -1,0 +1,35 @@
+# System requirements for the eYRC Khojo-Drone Swift Pico workspace.
+#
+# Install with:
+#   sudo apt install -y $(cat setup/requirements.txt | grep -v '^#' | tr '\n' ' ')
+#
+# The script setup/install_workspace.sh installs these automatically.
+
+# --- Core ROS 2 -----------------------------------------------------------
+ros-humble-desktop
+python3-colcon-common-extensions
+ros-dev-tools
+
+# --- Build dependencies ---------------------------------------------------
+libglfw3-dev
+eigen
+libeigen3-dev
+
+# --- Interfaces required by the simulation stack --------------------------
+# actuator_msgs : required by rotors_control (the thrust controller)
+ros-humble-actuator-msgs
+# image_view    : camera preview window used by the simulation launch file
+ros-humble-image-view
+ros-humble-image-geometry
+ros-humble-image-pipeline
+
+# --- Python packages used by the task scripts ----------------------------
+# OpenCV and NumPy come with the ROS desktop install.  They are listed here
+# for completeness - DO NOT install opencv-python via pip, it conflicts with
+# the system OpenCV that ROS 2 links against.
+python3-opencv
+python3-numpy
+
+# --- Optional: recording and analysing ROS 2 bags -------------------------
+ros-humble-rosbag2-storage-mcap   # optional alternative bag format
+python3-matplotlib                # only needed to regenerate the docs figures

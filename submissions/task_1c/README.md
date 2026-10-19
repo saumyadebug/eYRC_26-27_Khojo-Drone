@@ -53,15 +53,15 @@ with the 0.035 altitude low-pass filter.
 
 ## Recorded performance (`rosbag/`)
 
-Bag duration **89.73 s**; both required topics present.
+Bag duration **89.69 s**; both required topics present.
 
 | Axis | Max abs error | Last 10 s max | Last 10 s mean |
 |---|---|---|---|
 | x (`roll_error`) | 0.017 | 0.014 | +0.001 |
 | y (`pitch_error`) | 0.018 | 0.012 | −0.004 |
-| z (`throttle_error`) | 0.890 | 0.271 | −0.179 |
+| z (`throttle_error`) | 0.337 | 0.318 | −0.177 |
 
-**All three axes held inside ±0.4 for 82.3 s continuously** (requirement ≥ 10 s).
+**All three axes held inside ±0.4 for the entire 89.7 s recording** (requirement ≥ 10 s).
 
 ## Robustness features (carried over from Task 1B)
 
