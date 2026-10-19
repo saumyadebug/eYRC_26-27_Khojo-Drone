@@ -92,11 +92,15 @@ class Task1CController(Node):
 		#
 		#   position error -> desired tilt (outer PID) -> rc_pitch / rc_roll
 		#
-		# The inner attitude loop is handled by the vehicle.  The signs below
-		# were established from the simulation; keep +1 / -1 unless the
-		# geometry changes.
-		self.roll_sign = 1.0
-		self.pitch_sign = 1.0
+		# The inner attitude loop is handled by the vehicle.
+		#
+		# AXIS MAP: rc_pitch drives x, rc_roll drives y (the vehicle tilts to
+		# translate; verified in the simulation - each axis holds on its own).
+		# With error = desired - measured, a negative error must move the
+		# drone towards -axis, which is achieved by driving the corresponding
+		# RC channel BELOW neutral.  Both signs are therefore +1.
+		self.pitch_sign = 1.0     # applies to error[0] (x) -> rc_pitch
+		self.roll_sign = 1.0      # applies to error[1] (y) -> rc_roll
 
 		# Outer-loop gains produce a desired tilt angle in radians.
 		# The altitude gains (index 2) are kept in RC counts, as in Task 1B.
@@ -353,15 +357,17 @@ class Task1CController(Node):
 		# Altitude: subtract from neutral, because larger WhyCode z = lower.
 		max_dev = min(self.hover_value - self.min_value, self.max_value - self.hover_value)
 
-		tilt_roll = self.roll_sign * terms[0]
-		tilt_pitch = self.pitch_sign * terms[1]
-		tilt_roll = max(-self.max_tilt, min(self.max_tilt, tilt_roll))
+		# Axis map (measured): error[0] is x and is driven by rc_pitch;
+		# error[1] is y and is driven by rc_roll.
+		tilt_pitch = self.pitch_sign * terms[0]
+		tilt_roll = self.roll_sign * terms[1]
 		tilt_pitch = max(-self.max_tilt, min(self.max_tilt, tilt_pitch))
+		tilt_roll = max(-self.max_tilt, min(self.max_tilt, tilt_roll))
 
-		roll_cmd = int(round(max(self.min_value, min(self.max_value,
-			self.hover_value + self.rc_per_radian * tilt_roll))))
 		pitch_cmd = int(round(max(self.min_value, min(self.max_value,
 			self.hover_value + self.rc_per_radian * tilt_pitch))))
+		roll_cmd = int(round(max(self.min_value, min(self.max_value,
+			self.hover_value + self.rc_per_radian * tilt_roll))))
 
 		throttle_out = -terms[2]
 		throttle_out = max(-max_dev, min(max_dev, throttle_out))

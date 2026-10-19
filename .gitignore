@@ -1,0 +1,11 @@
+# build / install artefacts
+build/
+install/
+log/
+
+# python
+__pycache__/
+*.pyc
+
+# generated outputs (re-created by running the tasks)
+swift_pico/scripts/*_results.txt
